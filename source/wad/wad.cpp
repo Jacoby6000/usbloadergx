@@ -322,13 +322,14 @@ bool Wad::InstallContents(const char *installpath)
 		// Install content
 		if(content->type == 0x8001) {
 			// shared content
-			int result = UpdateContentMap(installpath, content, filepath);
+			int result = CheckContentMap(installpath, content, filepath); 
 			if(result == 1) // exists already, skip file
 				continue;
 
 			else if(result < 0) // failure
 				return false;
 			// else it does not exist...install it
+			snprintf(filepath, sizeof(filepath), "%s/shared1/%08x.app", installpath, (unsigned int)content_map_size);
 		}
 		else {
 			// private content
@@ -419,6 +420,16 @@ bool Wad::InstallContents(const char *installpath)
 				ShowError(tr("File read/write error."));
 			return false;
 		}
+
+		if(content->type == 0x8001) {
+			// shared content installed ok. It's time to update content.map
+			int result = UpdateContentMap(installpath, content, filepath); 
+			if(result == 1) // exists already, skip file
+				continue;
+
+			else if(result < 0) // failure
+				return false;
+		}
 	}
 
 	return true;
@@ -481,8 +492,6 @@ int Wad::UpdateContentMap(const char *installpath, tmd_content *content, char *f
 	snprintf(filepath, 1024, "%s/shared1/content.map", installpath);
 	if(!WriteFile(filepath, content_map, content_map_size * sizeof(map_entry_t)))
 		return -1;
-
-	snprintf(filepath, 1024, "%s/shared1/%08x.app", installpath, (unsigned int)next_entry);
 
 	return 0;
 }

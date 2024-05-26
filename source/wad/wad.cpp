@@ -322,7 +322,7 @@ bool Wad::InstallContents(const char *installpath)
 		// Install content
 		if(content->type == 0x8001) {
 			// shared content
-			int result = CheckContentMap(installpath, content, filepath);
+			int result = UpdateContentMap(installpath, content, filepath);
 			if(result == 1) // exists already, skip file
 				continue;
 
@@ -448,6 +448,16 @@ int Wad::CheckContentMap(const char *installpath, tmd_content *content, char *fi
 			return 1; // content exists already
 	}
 
+	// Content does not exists
+	return 0;
+}
+
+int Wad::UpdateContentMap(const char *installpath, tmd_content *content, char *filepath)
+{
+	int result = CheckContentMap(installpath,content,filepath); 
+	if ( result != 0 )
+		return result; // content already exists or error
+
 	// Content does not exists, append it.
 	u32 next_entry = content_map_size;
 	u8 *tmp = (u8 *) realloc(content_map, (next_entry + 1) * sizeof(map_entry_t));
@@ -461,7 +471,7 @@ int Wad::CheckContentMap(const char *installpath, tmd_content *content, char *fi
 	content_map = tmp;
 	content_map_size++;
 
-	map = (map_entry_t *) content_map;
+	map_entry_t *map = (map_entry_t *) content_map;
 	char name[9];
 	sprintf(name, "%08x", (unsigned int)next_entry);
 	memcpy(map[next_entry].name, name, 8);

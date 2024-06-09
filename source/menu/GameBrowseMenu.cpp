@@ -40,6 +40,7 @@
 #include "sys.h"
 
 struct discHdr *dvdheader = NULL;
+bool allowUsedSpaceTxtUpdate;
 
 GameBrowseMenu::GameBrowseMenu()
 	: GuiWindow(screenwidth, screenheight)
@@ -525,6 +526,7 @@ int GameBrowseMenu::Execute()
 	GameBrowseMenu * Menu = new GameBrowseMenu();
 	mainWindow->Append(Menu);
 
+	allowUsedSpaceTxtUpdate = true;
 	if(Settings.ShowFreeSpace)
 	{
 		ThreadedTask::Instance()->AddCallback(&Menu->HDDSizeCallback);
@@ -543,6 +545,8 @@ int GameBrowseMenu::Execute()
 		retMenu = Menu->MainLoop();
 	}
 
+	// to avoid that the async thread updates usedSpaceText after menu deletion
+	allowUsedSpaceTxtUpdate = false;
 	delete Menu;
 
 	return retMenu;
@@ -1689,10 +1693,13 @@ void GameBrowseMenu::UpdateCallback(void * e)
 
 void GameBrowseMenu::SetFreeSpace(float freespace, float used)
 {
-	if (strcmp(Settings.db_language, "JA") == 0)
-		usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace + used, tr( "of" ), freespace, tr( "free" )));
+	if (strcmp(Settings.db_language, "JA") == 0) {
+		if (  allowUsedSpaceTxtUpdate == true )
+			usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace + used, tr( "of" ), freespace, tr( "free" )));
+	}
 	else
-		usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace, tr( "of" ), freespace + used, tr( "free" )));
+		if (  allowUsedSpaceTxtUpdate == true )
+			usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace, tr( "of" ), freespace + used, tr( "free" )));
 }
 
 void GameBrowseMenu::UpdateFreeSpace(void * arg)
@@ -1700,7 +1707,8 @@ void GameBrowseMenu::UpdateFreeSpace(void * arg)
 	if (Settings.ShowFreeSpace)
 	{
 		float freespace = 0.0, used = 0.0;
-		usedSpaceTxt->SetVisible(true);
+		if (  allowUsedSpaceTxtUpdate == true )
+			usedSpaceTxt->SetVisible(true);
 		int ret = WBFS_DiskSpace(&used, &freespace);
 		if (ret >= 0)
 			SetFreeSpace(freespace, used);

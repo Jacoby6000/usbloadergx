@@ -56,9 +56,16 @@ bool SystemMenuResources::Init()
 	// determine resource cid
 	u16 idx = 0xffff;
 	tmd_content *contents = TMD_CONTENTS( p_tmd );
+
+	// Priiloader moves some system resources that we rely on from index 1 to index 9.
+	// In doing this it creates a 10th index (9) to contain the moved resources.
+	// If priiloader is installed, we need to look for content at index 9 instead of index 1.
+	bool hasVWiiPriiloader = p_tmd->num_contents == 10;
+	u16 targetIndex = hasVWiiPriiloader ? 9 : 1;
+
 	for( u16 i = 0; i < p_tmd->num_contents; i++ )
 	{
-		if( contents[ i ].index == 1 )
+		if( contents[ i ].index == targetIndex )
 		{
 			idx = i;
 			break;

@@ -79,7 +79,7 @@ void CSettings::SetDefault()
 	strlcpy(GameCubePath, "usb1:/games/", sizeof(GameCubePath));
 	strlcpy(GameCubeSDPath, "sd:/games/", sizeof(GameCubeSDPath));
 	strlcpy(CustomAddress, "wiimmfi.de", sizeof(CustomAddress));
-	strlcpy(URL_Banners, "https://banner.rc24.xyz/", sizeof(URL_Banners));
+	strlcpy(URL_Banners, "http://banner.rc24.xyz/", sizeof(URL_Banners));
 	strlcpy(URL_Covers2D, "https://art.gametdb.com/wii/cover/", sizeof(URL_Covers2D));
 	strlcpy(URL_Covers3D, "https://art.gametdb.com/wii/cover3D/", sizeof(URL_Covers3D));
 	strlcpy(URL_CoversFull, "https://art.gametdb.com/wii/coverfull/", sizeof(URL_CoversFull));

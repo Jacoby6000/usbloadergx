@@ -1693,13 +1693,13 @@ void GameBrowseMenu::UpdateCallback(void * e)
 
 void GameBrowseMenu::SetFreeSpace(float freespace, float used)
 {
-	if (strcmp(Settings.db_language, "JA") == 0) {
-		if (  allowUsedSpaceTxtUpdate == true )
+	if (  allowUsedSpaceTxtUpdate == true ) {
+		if (strcmp(Settings.db_language, "JA") == 0) {
 			usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace + used, tr( "of" ), freespace, tr( "free" )));
-	}
-	else
-		if (  allowUsedSpaceTxtUpdate == true )
+		}
+		else
 			usedSpaceTxt->SetText(fmt("%.2fGB %s %.2fGB %s", freespace, tr( "of" ), freespace + used, tr( "free" )));
+	}
 }
 
 void GameBrowseMenu::UpdateFreeSpace(void * arg)

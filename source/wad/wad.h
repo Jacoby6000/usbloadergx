@@ -49,6 +49,7 @@ public:
 private:
 	bool InstallContents(const char *installpath);
 	int CheckContentMap(const char *installpath, tmd_content *content, char *filepath);
+	int UpdateContentMap(const char *installpath, tmd_content *content, char *filepath);
 	bool WriteFile(const char *filepath, u8 *buffer, u32 len);
 	bool SetTitleUID(const char *intallpath, const u64 &tid);
 

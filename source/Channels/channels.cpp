@@ -707,13 +707,22 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 *outsize, const char *pathPref
     u32 high = TITLE_UPPER(title);
     u32 low = TITLE_LOWER(title);
 
+
+    // avoid black banners - add path prefix length to ISFS_MAXPATH when loading from emuNAND 
+    int customMaxPath;
+    if (pathPrefix && *pathPrefix != 0)
+            customMaxPath = ISFS_MAXPATH + strlen(pathPrefix);
+        else
+            customMaxPath = ISFS_MAXPATH;
+    
+    // avoid black banners - we don't change filepath definition, it was already of this size for both cases...
     char *filepath = (char *)memalign(32, ISFS_MAXPATH + strlen(pathPrefix));
     if (!filepath)
         return NULL;
 
     do
     {
-        snprintf(filepath, ISFS_MAXPATH, "%s/title/%08x/%08x/content/title.tmd", pathPrefix, (unsigned int)high, (unsigned int)low);
+        snprintf(filepath, customMaxPath, "%s/title/%08x/%08x/content/title.tmd", pathPrefix, (unsigned int)high, (unsigned int)low);
 
         u8 *buffer = NULL;
         u32 filesize = 0;
@@ -748,7 +757,7 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 *outsize, const char *pathPref
         if (!found)
             break;
 
-        snprintf(filepath, ISFS_MAXPATH, "%s/title/%08x/%08x/content/%08x.app", pathPrefix, (unsigned int)high, (unsigned int)low, (unsigned int)bootcontent);
+        snprintf(filepath, customMaxPath, "%s/title/%08x/%08x/content/%08x.app", pathPrefix, (unsigned int)high, (unsigned int)low, (unsigned int)bootcontent);
 
         if (pathPrefix && *pathPrefix != 0)
             ret = LoadFileToMem(filepath, &buffer, &filesize);

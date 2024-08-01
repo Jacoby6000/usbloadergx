@@ -135,6 +135,10 @@ static const devoptab_t gecko_out = {
 	NULL,		// lstat_r
 	NULL,		// utimes_r
 #endif
+	NULL,		// fpathconf_r
+	NULL,		// pathconf_r
+	NULL,		// symlink_r
+	NULL,		// readlink_r
 };
 
 void USBGeckoOutput()

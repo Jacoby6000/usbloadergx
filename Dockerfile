@@ -15,6 +15,8 @@ RUN mkdir /projectroot
 COPY . /projectroot/
 RUN cd /projectroot && make clean && make -j8 dist
 
+RUN cat /opt/devkitpro/devkitPPC/powerpc-eabi/include/sys/iosupport.h
+
 
 # Copy the DOL and ELF out of the container
 FROM scratch AS export-stage

@@ -1,5 +1,4 @@
-#ifndef _H
-#define _H
+#pragma once
 
 #include "libs/libwbfs/libwbfs.h"
 #include "usbloader/frag.h"
@@ -42,4 +41,3 @@ class Wbfs
 		const u32 usbport;
 };
 
-#endif //_H

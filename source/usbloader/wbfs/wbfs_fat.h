@@ -33,7 +33,7 @@ class Wbfs_Fat: public Wbfs
 		void AddHeader(struct discHdr *discHeader);
 
 		virtual s32 GetFragList(u8 *);
-		virtual u8 GetFSType(void) { return PART_FS_FAT; }
+		virtual u8 GetFSType(void) const { return PART_FS_FAT; }
 
 		static bool CheckLayoutB(char *fname, int len, u8* id, char *fname_title);
 		static void CleanTitleCharacters(char *title);
